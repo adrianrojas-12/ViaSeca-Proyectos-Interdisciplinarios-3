@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/viaseca}
+    username: ${DB_USER:viaseca}
+    password: ${DB_PASSWORD:viaseca}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:cambia-este-secreto-por-uno-largo-y-aleatorio-123456}
+    expiracion-minutos: 1440
+  reportes:
+    consenso-minimo: 3
+    max-por-hora: 5
+    duracion-horas: 2
+    precision-maxima-metros: 100
+    radio-voto-metros: 500
+  reputacion:
+    suspension: -5

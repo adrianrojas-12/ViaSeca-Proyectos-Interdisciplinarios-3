@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16
+    container_name: viaseca-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-viaseca}
+      POSTGRES_USER: ${POSTGRES_USER:-viaseca}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-viaseca}
+    ports:
+      - "5433:5432"
+    volumes:
+      - viaseca-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-viaseca} -d ${POSTGRES_DB:-viaseca}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: viaseca-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-viaseca}
+      DB_USER: ${POSTGRES_USER:-viaseca}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-viaseca}
+      JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto-por-uno-largo-y-aleatorio-123456}
+    ports:
+      - "8080:8080"
+
+volumes:
+  viaseca-data:
