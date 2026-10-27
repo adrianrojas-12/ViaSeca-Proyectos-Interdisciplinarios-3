@@ -23,6 +23,7 @@ services:
       db:
         condition: service_healthy
     environment:
+      FOTOS_CARPETA: /app/uploads
       DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-viaseca}
       DB_USER: ${POSTGRES_USER:-viaseca}
       DB_PASSWORD: ${POSTGRES_PASSWORD:-viaseca}
@@ -30,6 +31,9 @@ services:
       ORS_API_KEY: ${ORS_API_KEY:-}
     ports:
       - "8080:8080"
+    volumes:
+      - viaseca-fotos:/app/uploads
 
 volumes:
   viaseca-data:
+  viaseca-fotos:

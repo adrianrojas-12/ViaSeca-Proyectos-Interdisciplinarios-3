@@ -22,6 +22,8 @@ public final class Dtos {
 
     public record TokenResponse(String token, String nombre) {}
 
+    public record FotoResponse(String url) {}
+
     public record ReporteRequest(
             @NotNull NivelAgua nivel,
             @NotNull @DecimalMin("-90") @DecimalMax("90") Double lat,

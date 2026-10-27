@@ -7,16 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ClimaService {
 
+    private static final Duration VIGENCIA_CACHE = Duration.ofMinutes(10);
+
     private final RestClient http;
     private final String url;
     private final double umbralMm;
+    private final Map<String, Entrada> cache = new ConcurrentHashMap<>();
 
     public ClimaService(@Value("${app.clima.url}") String url,
                         @Value("${app.clima.umbral-mm}") double umbralMm) {
@@ -29,6 +35,25 @@ public class ClimaService {
     }
 
     public Optional<Boolean> hayLluvia(double lat, double lng) {
+        return precipitacionMm(lat, lng).map(this::superaUmbral);
+    }
+
+    public boolean superaUmbral(double mm) {
+        return mm >= umbralMm;
+    }
+
+    public Optional<Double> precipitacionMm(double lat, double lng) {
+        String clave = Math.round(lat * 100) + ":" + Math.round(lng * 100);
+        Entrada guardada = cache.get(clave);
+        if (guardada != null && guardada.expira().isAfter(Instant.now())) {
+            return Optional.of(guardada.valor());
+        }
+        Optional<Double> consultado = consultar(lat, lng);
+        consultado.ifPresent(v -> cache.put(clave, new Entrada(v, Instant.now().plus(VIGENCIA_CACHE))));
+        return consultado;
+    }
+
+    private Optional<Double> consultar(double lat, double lng) {
         try {
             Respuesta r = http.get()
                     .uri(url + "?latitude={lat}&longitude={lng}&current=precipitation"
@@ -46,11 +71,13 @@ public class ClimaService {
                     .mapToDouble(Double::doubleValue)
                     .max().orElse(0)
                     : 0;
-            return Optional.of(Math.max(actual, maximoHorario) >= umbralMm);
+            return Optional.of(Math.max(actual, maximoHorario));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
+
+    private record Entrada(double valor, Instant expira) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Respuesta(Current current, Hourly hourly) {}

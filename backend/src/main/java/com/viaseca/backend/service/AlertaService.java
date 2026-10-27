@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,8 @@ public class AlertaService {
 
     private final ReporteRepository reportes;
     private final AlertaOficialRepository oficiales;
+    private final ClimaService clima;
 
-    /** Pestañas del Centro de alertas: TODAS, OFICIAL (INDECI) o COMUNIDAD. */
     @Transactional(readOnly = true)
     public AlertasResponse listar(String origen, double lat, double lng, double radio) {
         String o = origen.toUpperCase();
@@ -41,11 +42,13 @@ public class AlertaService {
         return new AlertasResponse(items.size(), items);
     }
 
-    /** Franja "Alerta de lluvias activa" y tarjeta "Ruta segura cercana". */
     @Transactional(readOnly = true)
     public MapaResumen resumenMapa(double lat, double lng) {
-        AlertaItem lluvia = oficiales.findByVigenteHastaAfterOrderByPublicadaEnDesc(Instant.now())
-                .stream().findFirst().map(AlertaService::deOficial).orElse(null);
+        AlertaItem lluvia = clima.precipitacionMm(lat, lng)
+                .filter(clima::superaUmbral)
+                .map(AlertaService::deClima)
+                .orElseGet(() -> oficiales.findByVigenteHastaAfterOrderByPublicadaEnDesc(Instant.now())
+                        .stream().findFirst().map(AlertaService::deOficial).orElse(null));
 
         var rutaSegura = reportes.cercanos(lat, lng, 3000).stream()
                 .filter(r -> r.getNivel() == NivelAgua.LIBRE)
@@ -54,6 +57,12 @@ public class AlertaService {
                 .orElse(null);
 
         return new MapaResumen(lluvia, rutaSegura);
+    }
+
+    private static AlertaItem deClima(double mm) {
+        return new AlertaItem("C-lluvia", "CLIMA", "Alerta de lluvias activa", "Tu zona",
+                String.format(Locale.ROOT, "Precipitación de %.1f mm/h en tu zona.", mm),
+                null, null, Instant.now(), null, "OPEN-METEO", false);
     }
 
     private static AlertaItem deReporte(Reporte r) {
