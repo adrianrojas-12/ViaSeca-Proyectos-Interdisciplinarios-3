@@ -48,6 +48,8 @@ public class Reporte {
 
     private int desmentidos;
 
+    private boolean sospechoso;
+
     @Column(name = "creado_en", nullable = false)
     private Instant creadoEn;
 

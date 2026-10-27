@@ -1,0 +1,3 @@
+INSERT INTO alertas_oficiales (fuente, titulo, ubicacion, descripcion, publicada_en, vigente_hasta) VALUES
+                                                                                                        ('INDECI', 'Alerta preventiva', 'Quebrada San Ildefonso', 'Incremento de caudal. Mantente alejado.', now() - interval '22 minutes', now() + interval '6 hours'),
+                                                                                                        ('SENAMHI', 'Alerta de lluvias activa', 'Chiclayo', 'Lluvias de moderada a fuerte intensidad en las próximas horas.', now() - interval '4 minutes', now() + interval '6 hours');

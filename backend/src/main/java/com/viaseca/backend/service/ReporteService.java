@@ -30,6 +30,7 @@ public class ReporteService {
     private final ReporteRepository reportes;
     private final VotoRepository votos;
     private final UsuarioRepository usuarios;
+    private final ClimaService clima;
 
     @Value("${app.reportes.consenso-minimo}") private int consensoMinimo;
     @Value("${app.reportes.max-por-hora}") private int maxPorHora;
@@ -67,7 +68,12 @@ public class ReporteService {
         r.setDireccion(req.direccion());
         r.setPrecisionMetros(req.precisionMetros());
         r.setFotoUrl(req.fotoUrl());
-        r.setConfirmaciones(1); // el autor cuenta como primera confirmación
+
+        boolean sospechoso = req.nivel() != NivelAgua.LIBRE
+                && clima.hayLluvia(req.lat(), req.lng()).map(llueve -> !llueve).orElse(false);
+        r.setSospechoso(sospechoso);
+
+        r.setConfirmaciones(1);
         r.setCreadoEn(ahora);
         r.setExpiraEn(ahora.plus(Duration.ofHours(duracionHoras)));
         reportes.save(r);
@@ -110,10 +116,9 @@ public class ReporteService {
 
         if (req.tipo() == TipoVoto.CONFIRMA) {
             r.setConfirmaciones(r.getConfirmaciones() + 1);
-            // reconfirmar renueva la vigencia del reporte
             r.setExpiraEn(Instant.now().plus(Duration.ofHours(duracionHoras)));
             if (r.getEstado() == EstadoReporte.SIN_CONFIRMAR
-                    && r.getConfirmaciones() >= consensoMinimo) {
+                    && r.getConfirmaciones() >= consensoMinimo + (r.isSospechoso() ? 1 : 0)) {
                 r.setEstado(EstadoReporte.CONFIRMADO);
                 autor.setReputacion(autor.getReputacion() + 1);
             }
@@ -146,7 +151,7 @@ public class ReporteService {
     public static ReporteResponse aRespuesta(Reporte r) {
         return new ReporteResponse(r.getId(), r.getNivel(), r.getEstado(),
                 r.getLat(), r.getLng(), r.getDireccion(), r.getFotoUrl(),
-                r.getConfirmaciones(), r.getDesmentidos(), r.getCreadoEn());
+                r.getConfirmaciones(), r.getDesmentidos(), r.getCreadoEn(), r.isSospechoso());
     }
 
     public static double distanciaMetros(double lat1, double lng1, double lat2, double lng2) {

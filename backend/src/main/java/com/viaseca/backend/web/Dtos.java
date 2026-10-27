@@ -38,7 +38,7 @@ public final class Dtos {
     public record ReporteResponse(
             Long id, NivelAgua nivel, EstadoReporte estado,
             double lat, double lng, String direccion, String fotoUrl,
-            int validaciones, int desmentidos, Instant creadoEn) {}
+            int validaciones, int desmentidos, Instant creadoEn, boolean sospechoso) {}
 
     public record AlertaItem(
             String id, String origen, String titulo, String ubicacion,
@@ -48,4 +48,8 @@ public final class Dtos {
     public record AlertasResponse(long incidenciasActivas, List<AlertaItem> items) {}
 
     public record MapaResumen(AlertaItem alertaLluvia, ReporteResponse rutaSegura) {}
+
+    public record RutaResponse(
+            double distanciaMetros, double duracionSegundos,
+            int zonasEvitadas, List<List<Double>> coordenadas) {}
 }

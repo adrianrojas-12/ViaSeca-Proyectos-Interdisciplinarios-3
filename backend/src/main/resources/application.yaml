@@ -22,3 +22,10 @@ app:
     radio-voto-metros: 500
   reputacion:
     suspension: -5
+  clima:
+    url: https://api.open-meteo.com/v1/forecast
+    umbral-mm: 0.1
+  ors:
+    url: https://api.openrouteservice.org
+    api-key: ${ORS_API_KEY:}
+    radio-evitar-metros: 60

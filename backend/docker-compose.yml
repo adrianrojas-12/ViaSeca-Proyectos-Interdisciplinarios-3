@@ -27,6 +27,7 @@ services:
       DB_USER: ${POSTGRES_USER:-viaseca}
       DB_PASSWORD: ${POSTGRES_PASSWORD:-viaseca}
       JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto-por-uno-largo-y-aleatorio-123456}
+      ORS_API_KEY: ${ORS_API_KEY:-}
     ports:
       - "8080:8080"
 
