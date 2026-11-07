@@ -1,6 +1,8 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Bell, Droplets, FileText, Info, LogIn, LogOut, Map as MapIcon } from "lucide-react";
 import { useAuth } from "../auth";
+import { useAvisos } from "../useAvisos";
+import Avisos from "./Avisos";
 
 const links = [
   { to: "/", label: "Mapa de riesgo", short: "Mapa", Icon: MapIcon },
@@ -33,8 +35,10 @@ function Cuenta({ oscuro }: { oscuro: boolean }) {
 }
 
 export default function Layout() {
+  const { avisos, cerrar } = useAvisos();
   return (
     <div className="min-h-screen md:flex">
+            <Avisos avisos={avisos} cerrar={cerrar} />
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col gap-6 bg-navy-900 p-4 text-white md:flex">
         <Brand />
         <nav className="flex flex-col gap-1" aria-label="Principal">

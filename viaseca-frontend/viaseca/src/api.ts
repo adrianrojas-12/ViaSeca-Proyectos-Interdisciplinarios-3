@@ -1,5 +1,5 @@
 import { API } from "./config";
-import type { AlertasResponse, FiltroMapa, MapaResumen, Modo, NuevoReporte, Origen, Reporte, Ruta, Sesion, TipoVoto } from "./types";
+import type { AlertasResponse, FiltroMapa, MapaResumen, Modo, NuevoReporte, Origen, Pronostico, Reporte, Ruta, Sesion, TipoVoto } from "./types";
 import type { Punto } from "./geo";
 
 const K_TOKEN = "viaseca-token";
@@ -106,6 +106,8 @@ export const api = {
     pedir<AlertasResponse>(`/alertas?origen=${origen}&lat=${lat}&lng=${lng}&radio=${radio}`),
 
   resumenMapa: (lat: number, lng: number) => pedir<MapaResumen>(`/mapa/resumen?lat=${lat}&lng=${lng}`),
+
+  pronostico: (lat: number, lng: number) => pedir<Pronostico>(`/clima/pronostico?lat=${lat}&lng=${lng}`),
 
   ruta: async (o: Punto, d: Punto, modo: Modo): Promise<Ruta> => {
     const r = await pedir<{ distanciaMetros: number; duracionSegundos: number; zonasEvitadas: number; coordenadas: number[][] }>(

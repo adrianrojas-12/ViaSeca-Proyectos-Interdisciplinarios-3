@@ -54,4 +54,13 @@ public final class Dtos {
     public record RutaResponse(
             double distanciaMetros, double duracionSegundos,
             int zonasEvitadas, List<List<Double>> coordenadas) {}
+
+    public record HoraLluvia(String hora, double mm, int probabilidad) {}
+
+    public record DiaLluvia(String fecha, double mm, int probabilidad) {}
+
+    public record Pronostico(
+            String nivel, String titulo, String mensaje, String recomendacion,
+            double mmAhora, double mmMaxHora, int probabilidadMax, double mmTotal24h,
+            String inicioLluvia, List<HoraLluvia> horas, List<DiaLluvia> dias, String fuente) {}
 }

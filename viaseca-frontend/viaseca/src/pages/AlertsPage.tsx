@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BellOff, CloudRain, ShieldCheck, Users } from "lucide-react";
 import Chips from "../components/Chips";
+import PronosticoBanner from "../components/PronosticoBanner";
 import { api } from "../api";
 import { CENTRO, RADIO_CIUDAD } from "../config";
 import { useCarga } from "../hooks";
@@ -47,6 +48,7 @@ export default function AlertsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <h1 className="text-2xl font-bold text-navy-900">Centro de alertas</h1>
+       <PronosticoBanner />
       <Chips label="Origen de la alerta" value={origen} onChange={setOrigen} options={[["TODAS", "Todas"], ["OFICIAL", "Oficiales"], ["COMUNIDAD", "Comunidad"]]} />
       <p className="text-sm text-slate-600" aria-live="polite">{cargando && !datos ? "Cargando…" : `${datos?.incidenciasActivas ?? 0} incidencia(s) activa(s)`}</p>
       {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}

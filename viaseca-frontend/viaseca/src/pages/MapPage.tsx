@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { CloudRain, FileText, ShieldCheck } from "lucide-react";
+import { FileText, ShieldCheck } from "lucide-react";
 import Chips from "../components/Chips";
+import PronosticoBanner from "../components/PronosticoBanner";
 import RiskMap from "../components/RiskMap";
 import RutaPanel from "../components/RutaPanel";
 import { api } from "../api";
@@ -28,9 +29,10 @@ export default function MapPage() {
           <h1 className="text-2xl font-bold text-navy-900">Mapa de riesgo</h1>
           <span className="text-sm text-slate-600" aria-live="polite">{reportes.cargando && !reportes.datos ? "Cargando…" : `Mostrando ${lista.length} reporte(s)`}</span>
         </div>
-        {lluvia && (
-          <p role="status" className="flex items-start gap-2 rounded-xl border border-sky-300 bg-sky-50 p-3 text-sm text-sky-900">
-            <CloudRain aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />
+        <PronosticoBanner />
+        {lluvia && lluvia.origen !== "CLIMA" && (
+          <p role="status" className="flex items-start gap-2 rounded-xl border border-blue-300 bg-blue-50 p-3 text-sm text-blue-900">
+            <ShieldCheck aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />
             <span><b>{lluvia.titulo}</b>{lluvia.descripcion ? `. ${lluvia.descripcion}` : ""}{lluvia.fuente ? ` Fuente: ${lluvia.fuente}.` : ""}</span>
           </p>
         )}

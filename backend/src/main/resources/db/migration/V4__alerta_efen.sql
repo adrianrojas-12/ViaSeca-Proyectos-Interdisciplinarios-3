@@ -1,0 +1,2 @@
+INSERT INTO alertas_oficiales (fuente, titulo, ubicacion, descripcion, publicada_en, vigente_hasta) VALUES
+    ('ENFEN', 'Alerta de El Niño Costero', 'Costa norte del Perú', 'Estado del sistema de alerta según el Comunicado Oficial ENFEN N.° 15-2026: se mantiene la alerta de El Niño Costero, con alta probabilidad de que el evento persista hasta el verano de 2027.', now(), now() + interval '30 days');

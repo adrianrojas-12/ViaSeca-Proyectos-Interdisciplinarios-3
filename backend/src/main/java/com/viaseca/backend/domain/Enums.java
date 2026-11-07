@@ -9,5 +9,5 @@ public final class Enums {
 
     public enum TipoVoto { CONFIRMA, DESMIENTE }
 
-    public enum FuenteAlerta { INDECI, MINEDU, SENAMHI }
+    public enum FuenteAlerta { INDECI, MINEDU, SENAMHI, ENFEN }
 }

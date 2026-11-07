@@ -64,3 +64,21 @@ export const ESTADO_LABEL: Record<Estado, string> = {
   EXPIRADO: "Expirado",
 };
 export const fmt = (iso: string | number) => new Date(iso).toLocaleString("es-PE", { dateStyle: "short", timeStyle: "short" });
+
+export type NivelAviso = "NINGUNA" | "VIGILANCIA" | "PRECAUCION" | "ALERTA";
+export interface HoraLluvia { hora: string; mm: number; probabilidad: number }
+export interface DiaLluvia { fecha: string; mm: number; probabilidad: number }
+export interface Pronostico {
+  nivel: NivelAviso;
+  titulo: string;
+  mensaje: string;
+  recomendacion: string;
+  mmAhora: number;
+  mmMaxHora: number;
+  probabilidadMax: number;
+  mmTotal24h: number;
+  inicioLluvia: string | null;
+  horas: HoraLluvia[];
+  dias: DiaLluvia[];
+  fuente: string;
+}
