@@ -177,4 +177,4 @@ VíaSeca es un **prototipo académico**, y conviene ser claros con lo que es rea
 
 ## Licencia
 
-Proyecto académico con fines educativos. [Define aquí la licencia si deseas publicar el código bajo una.]
+Proyecto académico con fines educativos.
