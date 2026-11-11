@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
+import { API } from "../config";
 import { fmt, NIVEL_COLOR, NIVEL_DESC, NIVEL_LABEL, type Reporte } from "../types";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -31,7 +32,7 @@ export default function RiskMap({ reportes, ruta }: Props) {
     g.clearLayers();
     reportes.forEach((r) =>
       L.circleMarker([r.lat, r.lng], { radius: 10, color: "#fff", weight: 2, fillColor: NIVEL_COLOR[r.nivel], fillOpacity: 0.95 })
-        .bindPopup(`<b>${NIVEL_LABEL[r.nivel]}</b> · ${NIVEL_DESC[r.nivel]}<br><i>${esc(r.direccion ?? "Sin dirección")}</i><br>${r.validaciones} validaciones · ${fmt(r.creadoEn)}`)
+        .bindPopup(`<b>${NIVEL_LABEL[r.nivel]}</b> · ${NIVEL_DESC[r.nivel]}<br><i>${esc(r.direccion ?? "Sin dirección")}</i><br>${r.validaciones} validaciones · ${fmt(r.creadoEn)}${r.fotoUrl ? `<br><img src="${esc(API + r.fotoUrl)}" alt="Foto del reporte" style="max-width:200px;margin-top:6px;border-radius:8px">` : ""}`)
         .addTo(g)
     );
   }, [reportes]);

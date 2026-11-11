@@ -51,7 +51,7 @@ public class ReporteService {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "La precisión del GPS es insuficiente. Intenta de nuevo al aire libre.");
         }
-        if (req.fotoUrl() != null && !req.fotoUrl().isBlank() && !req.fotoUrl().startsWith("/uploads/")) {
+        if (req.fotoUrl() != null && !req.fotoUrl().isBlank() && !req.fotoUrl().matches("^/uploads/[A-Za-z0-9.-]+$")) {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, "La foto debe subirse primero con /fotos");
         }
         long recientes = reportes.countByUsuarioIdAndCreadoEnAfter(

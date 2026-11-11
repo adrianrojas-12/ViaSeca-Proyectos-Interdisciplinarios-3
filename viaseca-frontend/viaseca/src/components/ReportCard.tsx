@@ -38,14 +38,18 @@ export default function ReportCard({ r, onCambio }: Props) {
         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${NIVEL_BADGE[r.nivel]}`}>{NIVEL_DESC[r.nivel]}</span>
       </div>
       <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-slate-700"><MapPin aria-hidden className="h-4 w-4" />{r.direccion ?? `${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}`}</p>
-      {r.fotoUrl && <img src={`${API}${r.fotoUrl}`} alt="Foto del reporte" loading="lazy" className="mt-3 h-40 w-full rounded-xl object-cover" />}
+      {r.fotoUrl && (
+        <a href={`${API}${r.fotoUrl}`} target="_blank" rel="noreferrer" className="mt-3 block">
+          <img src={`${API}${r.fotoUrl}`} alt="Foto del reporte" loading="lazy" className="max-h-72 w-full rounded-xl bg-slate-100 object-contain" />
+        </a>
+      )}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
         <span className="flex items-center gap-1"><Clock aria-hidden className="h-3.5 w-3.5" />{fmt(r.creadoEn)}</span>
         <span className="flex items-center gap-1">
           {r.estado === "CONFIRMADO" ? <CheckCircle2 aria-hidden className="h-3.5 w-3.5 text-green-700" /> : <Hourglass aria-hidden className="h-3.5 w-3.5" />}
           {ESTADO_LABEL[r.estado]}
         </span>
-        <span className="flex items-center gap-1"><Users aria-hidden className="h-3.5 w-3.5" />{r.validaciones} validaciones</span>
+        <span className="flex items-center gap-1"><Users aria-hidden className="h-3.5 w-3.5" />{r.validaciones} {r.validaciones === 1 ? "validación" : "validaciones"}</span>
         {r.sospechoso && <span className="rounded-full bg-slate-200 px-2 py-0.5 font-medium text-slate-700">Sin lluvia registrada en la zona</span>}
       </div>
       {onCambio && (
