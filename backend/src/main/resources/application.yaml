@@ -24,7 +24,7 @@ app:
   reportes:
     consenso-minimo: 3
     max-por-hora: 5
-    duracion-horas: 2
+    duracion-horas: ${DURACION_HORAS:2}
     precision-maxima-metros: 100
     radio-voto-metros: ${RADIO_VOTO_METROS:500}
   reputacion:
