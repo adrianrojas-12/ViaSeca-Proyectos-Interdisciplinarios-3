@@ -1,8 +1,9 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { Bell, Droplets, FileText, Info, LogIn, LogOut, Map as MapIcon } from "lucide-react";
 import { useAuth } from "../auth";
 import { useAvisos } from "../useAvisos";
 import Avisos from "./Avisos";
+import { Bell, Droplets, FileText, Info, LogIn, LogOut, Map as MapIcon, Moon, Sun } from "lucide-react";
+import { useTema } from "../tema";
 
 const links = [
   { to: "/", label: "Mapa de riesgo", short: "Mapa", Icon: MapIcon },
@@ -36,9 +37,22 @@ function Cuenta({ oscuro }: { oscuro: boolean }) {
 
 export default function Layout() {
   const { avisos, cerrar } = useAvisos();
+  const { oscuro, alternar } = useTema();
+
+  const BotonTema = (
+    <button
+      type="button"
+      onClick={alternar}
+      aria-label={oscuro ? "Activar modo claro" : "Activar modo oscuro"}
+      className="rounded-xl border border-white/40 p-2 text-white hover:bg-navy-700"
+    >
+      {oscuro ? <Sun aria-hidden className="h-4 w-4" /> : <Moon aria-hidden className="h-4 w-4" />}
+    </button>
+  );
+
   return (
     <div className="min-h-screen md:flex">
-            <Avisos avisos={avisos} cerrar={cerrar} />
+      <Avisos avisos={avisos} cerrar={cerrar} />
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col gap-6 bg-navy-900 p-4 text-white md:flex">
         <Brand />
         <nav className="flex flex-col gap-1" aria-label="Principal">
@@ -48,12 +62,18 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-        <div className="mt-auto"><Cuenta oscuro /></div>
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <Cuenta oscuro />
+          {BotonTema}
+        </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between gap-2 bg-navy-900 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] text-white md:hidden">
           <Brand />
-          <Cuenta oscuro={false} />
+          <div className="flex items-center gap-2">
+            <Cuenta oscuro={false} />
+            {BotonTema}
+          </div>
         </header>
         <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">
           <p className="mb-4 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">

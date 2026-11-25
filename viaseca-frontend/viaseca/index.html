@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>VíaSeca</title>
+    <script>
+      try {
+        var t = localStorage.getItem("tema");
+        if (t === "oscuro" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches))
+          document.documentElement.classList.add("dark");
+      } catch (e) {}
+    </script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>

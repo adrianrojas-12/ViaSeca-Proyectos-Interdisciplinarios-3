@@ -2,3 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 body { @apply bg-slate-100 text-slate-900 antialiased; }
+
+html.dark { color-scheme: dark; }
+html.dark body { background: #0b1220; color: #e2e8f0; }
+
+html.dark .bg-white { background-color: #111b2e; }
+html.dark .bg-slate-50, html.dark .bg-slate-100 { background-color: #1a2740; }
+
+html.dark .text-navy-900 { color: #e2e8f0; }
+html.dark .text-slate-500, html.dark .text-slate-600 { color: #94a3b8; }
+html.dark .text-slate-700, html.dark .text-slate-800 { color: #cbd5e1; }
+
+html.dark .border, html.dark .border-t, html.dark .border-slate-300 { border-color: #2b3a55; }
+html.dark input, html.dark select, html.dark textarea {
+  background-color: #0f1a2e; color: #e2e8f0; border-color: #2b3a55;
+}
+
+html.dark .bg-amber-50 { background-color: #3a2a0a; }
+html.dark .text-amber-900 { color: #fde68a; }
+html.dark .bg-sky-50 { background-color: #0c2438; }
+html.dark .text-sky-900 { color: #bae6fd; }
+html.dark .bg-red-50 { background-color: #3b1212; }
+html.dark .text-red-800, html.dark .text-red-700 { color: #fca5a5; }
+
+/* Mapa en oscuro (invierte los colores de las baldosas de OpenStreetMap) */
+html.dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(.9); }
