@@ -1,11 +1,39 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
+import { GOOGLE_CLIENT_ID } from "../config";
 
 const inp = "w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-navy-700";
 
+function BotonGoogle({ registro, onCredential }: { registro: boolean; onCredential: (c: string) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return;
+    const iniciar = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const g = (window as any).google;
+      if (!g || !ref.current) return false;
+      g.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: (r: { credential: string }) => onCredential(r.credential),
+      });
+      ref.current.innerHTML = "";
+      g.accounts.id.renderButton(ref.current, {
+        theme: "outline", size: "large", width: 320, locale: "es",
+        text: registro ? "signup_with" : "signin_with",
+      });
+      return true;
+    };
+    if (iniciar()) return;
+    const t = setInterval(() => { if (iniciar()) clearInterval(t); }, 300);
+    return () => clearInterval(t);
+  }, [registro, onCredential]);
+  if (!GOOGLE_CLIENT_ID) return null;
+  return <div ref={ref} className="flex justify-center" />;
+}
+
 export default function LoginPage() {
-  const { sesion, entrar, registrar } = useAuth();
+  const { sesion, entrar, registrar, entrarGoogle } = useAuth();
   const ir = useNavigate();
   const [modoRegistro, setModoRegistro] = useState(false);
   const [nombre, setNombre] = useState("");
@@ -34,6 +62,16 @@ export default function LoginPage() {
     }
   };
 
+  const conGoogle = async (credential: string) => {
+    setError("");
+    try {
+      await entrarGoogle(credential);
+      ir("/reportes");
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-md space-y-4">
       <h1 className="text-2xl font-bold text-navy-900">{modoRegistro ? "Crear cuenta" : "Iniciar sesión"}</h1>
@@ -57,6 +95,12 @@ export default function LoginPage() {
           {busy ? "Un momento…" : modoRegistro ? "Crear cuenta" : "Entrar"}
         </button>
       </form>
+
+      <div className="flex items-center gap-3 text-xs text-slate-500">
+        <hr className="flex-1" />o<hr className="flex-1" />
+      </div>
+      <BotonGoogle registro={modoRegistro} onCredential={(c) => void conGoogle(c)} />
+
       <button type="button" onClick={() => { setModoRegistro(!modoRegistro); setError(""); }} className="w-full text-center text-sm font-semibold text-navy-900 underline">
         {modoRegistro ? "Ya tengo cuenta" : "No tengo cuenta, quiero registrarme"}
       </button>

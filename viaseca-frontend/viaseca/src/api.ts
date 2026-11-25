@@ -82,6 +82,8 @@ async function pedir<T>(ruta: string, init: RequestInit = {}, conSesion = false)
 const json = (cuerpo: unknown): RequestInit => ({ method: "POST", body: JSON.stringify(cuerpo) });
 
 export const api = {
+  google: (credential: string) =>
+    pedir<Sesion & { token: string }>("/auth/google", json({ credential })),
   registro: (nombre: string, correo: string, password: string) =>
     pedir<Sesion & { token: string }>("/auth/registro", json({ nombre, correo, password })),
 

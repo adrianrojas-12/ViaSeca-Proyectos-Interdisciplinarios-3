@@ -55,6 +55,8 @@ public final class Dtos {
             double distanciaMetros, double duracionSegundos,
             int zonasEvitadas, List<List<Double>> coordenadas) {}
 
+    public record GoogleRequest(@NotBlank String credential) {}
+
     public record HoraLluvia(String hora, double mm, int probabilidad) {}
 
     public record DiaLluvia(String fecha, double mm, int probabilidad) {}

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import com.viaseca.backend.web.Dtos.GoogleRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,5 +26,10 @@ public class AuthController {
     @PostMapping("/login")
     public TokenResponse login(@Valid @RequestBody LoginRequest req) {
         return auth.login(req);
+    }
+
+    @PostMapping("/google")
+    public TokenResponse google(@Valid @RequestBody GoogleRequest req) {
+        return auth.loginGoogle(req.credential());
     }
 }

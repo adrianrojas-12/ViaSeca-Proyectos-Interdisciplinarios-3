@@ -6,6 +6,7 @@ interface Ctx {
   sesion: Sesion | null;
   entrar: (correo: string, password: string) => Promise<void>;
   registrar: (nombre: string, correo: string, password: string) => Promise<void>;
+  entrarGoogle: (credential: string) => Promise<void>;
   salir: () => void;
 }
 
@@ -24,6 +25,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     registrar: async (nombre, correo, password) => {
       const r = await api.registro(nombre, correo, password);
+      guardarSesion({ token: r.token, nombre: r.nombre });
+    },
+    entrarGoogle: async (credential) => {
+      const r = await api.google(credential);
       guardarSesion({ token: r.token, nombre: r.nombre });
     },
     salir: borrarSesion,
